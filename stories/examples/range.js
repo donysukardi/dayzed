@@ -15,7 +15,7 @@ let Calendar = glamorous.div({
 
 let Month = glamorous.div({
   display: 'inline-block',
-  width: '50%',
+  width: '300px',
   padding: '0 10px 30px',
   boxSizing: 'border-box'
 });
@@ -24,7 +24,9 @@ const dayOfMonthStyle = {
   display: 'inline-block',
   width: 'calc((100% / 7) - 4px)', // make allowance for active border
   border: 'none',
-  margin: '2px' // make allowance for active border
+  fontSize: '14px',
+  padding: '8px 0'
+  // make allowance for active border
 };
 
 let DayOfMonth = glamorous.button(
@@ -33,23 +35,31 @@ let DayOfMonth = glamorous.button(
     let background = today ? 'cornflowerblue' : '';
     background = selected || isInRange ? 'purple' : background;
     background = unavailable ? 'teal' : background;
-    let borderRadius = start ? '8px 0 0 8px' : '';
-    borderRadius = end ? '0 8px 8px 0' : borderRadius;
+
+    let color = selected || isInRange ? 'white' : 'inherit';
+
     return {
       background,
+      color,
       ...(start
-        ? { borderTopLeftRadius: '8px', borderBottomLeftRadius: '8px' }
+        ? { borderTopLeftRadius: '16px', borderBottomLeftRadius: '16px' }
         : {}),
       ...(end
-        ? { borderTopRightRadius: '8px', borderBottomRightRadius: '8px' }
+        ? { borderTopRightRadius: '16px', borderBottomRightRadius: '16px' }
         : {})
     };
   }
 );
 
-let DayOfMonthEmpty = glamorous.div(dayOfMonthStyle, {
-  background: 'transparent'
-});
+let DayOfMonthEmpty = glamorous.div(
+  dayOfMonthStyle,
+  {
+    background: 'transparent'
+  },
+  ({ bold }) => {
+    return bold ? { fontWeight: 'bold' } : {};
+  }
+);
 
 class RangeDatepicker extends React.Component {
   state = { hoveredDate: null };
@@ -176,11 +186,12 @@ class RangeDatepicker extends React.Component {
                 </div>
                 {calendars.map(calendar => (
                   <Month key={`${calendar.month}${calendar.year}`}>
-                    <div>
+                    <div style={{ margin: '8px 0' }}>
                       {monthNamesFull[calendar.month]} {calendar.year}
                     </div>
                     {weekdayNamesShort.map(weekday => (
                       <DayOfMonthEmpty
+                        bold
                         key={`${calendar.month}${calendar.year}${weekday}`}
                       >
                         {weekday}

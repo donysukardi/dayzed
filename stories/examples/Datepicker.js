@@ -12,7 +12,7 @@ let Calendar = glamorous.div({
 
 let Month = glamorous.div({
   display: 'inline-block',
-  width: '50%',
+  width: '300px',
   padding: '0 10px 30px',
   boxSizing: 'border-box'
 });
@@ -21,7 +21,9 @@ const dayOfMonthStyle = {
   display: 'inline-block',
   width: 'calc((100% / 7) - 4px)', // make allowance for active border
   border: 'none',
-  margin: '2px' // make allowance for active border
+  margin: '2px', // make allowance for active border
+  fontSize: '14px',
+  padding: '8px 0'
 };
 
 let DayOfMonth = glamorous.button(
@@ -35,9 +37,15 @@ let DayOfMonth = glamorous.button(
   }
 );
 
-let DayOfMonthEmpty = glamorous.div(dayOfMonthStyle, {
-  background: 'transparent'
-});
+let DayOfMonthEmpty = glamorous.div(
+  dayOfMonthStyle,
+  {
+    background: 'transparent'
+  },
+  ({ bold }) => {
+    return bold ? { fontWeight: 'bold' } : {};
+  }
+);
 
 let [sun, ...restOfWeek] = weekdayNamesShort;
 let weekdayNamesShortMon = [...restOfWeek, sun];
@@ -159,11 +167,12 @@ class Datepicker extends React.Component {
                 </div>
                 {calendars.map(calendar => (
                   <Month key={`${calendar.month}${calendar.year}`}>
-                    <div data-test="monthYear">
+                    <div style={{ margin: '8px 0' }} data-test="monthYear">
                       {monthNamesFull[calendar.month]} {calendar.year}
                     </div>
                     {weekdayNames.map((weekday, idx) => (
                       <DayOfMonthEmpty
+                        bold
                         key={`${calendar.month}${calendar.year}${weekday}`}
                         {...(idx === 0
                           ? { 'data-test': 'firstDayOfWeek' }
