@@ -1,6 +1,7 @@
 import React from 'react';
 import glamorous from 'glamorous';
 import isSameDay from 'date-fns/is_same_day';
+import compareAsc from 'date-fns/compare_asc';
 
 import Dayzed from '../../src/index';
 import ArrowKeysReact from 'arrow-keys-react';
@@ -124,6 +125,14 @@ class RangeDatepicker extends React.Component {
   };
 
   render() {
+    const { selected } = this.props;
+    const dates = selected.length
+      ? [
+          selected[0],
+          ...[].concat(selected[1] || this.state.hoveredDate || [])
+        ].sort(compareAsc)
+      : [];
+
     return (
       <Dayzed
         date={this.props.date}
@@ -186,21 +195,9 @@ class RangeDatepicker extends React.Component {
                           return <DayOfMonthEmpty key={key} />;
                         }
                         let { date, selected, selectable, today } = dateObj;
-                        let start =
-                          this.props.selected.length &&
-                          isSameDay(date, this.props.selected[0]);
-                        let end = false;
-                        if (
-                          this.props.selected.length > 1 &&
-                          isSameDay(date, this.props.selected[1])
-                        ) {
-                          end = true;
-                        } else if (
-                          this.props.selected.length &&
-                          isSameDay(date, this.state.hoveredDate)
-                        ) {
-                          end = true;
-                        }
+
+                        let start = dates[0] && isSameDay(dates[0], date);
+                        let end = dates[1] && isSameDay(dates[1], date);
 
                         return (
                           <DayOfMonth
