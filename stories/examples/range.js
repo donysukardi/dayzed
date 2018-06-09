@@ -1,5 +1,7 @@
 import React from 'react';
 import glamorous from 'glamorous';
+import isSameDay from 'date-fns/is_same_day';
+
 import Dayzed from '../../src/index';
 import ArrowKeysReact from 'arrow-keys-react';
 import { monthNamesFull, weekdayNamesShort } from './calendarUtils';
@@ -26,11 +28,21 @@ const dayOfMonthStyle = {
 
 let DayOfMonth = glamorous.button(
   dayOfMonthStyle,
-  ({ selected, unavailable, today, isInRange }) => {
+  ({ selected, unavailable, today, isInRange, start, end }) => {
     let background = today ? 'cornflowerblue' : '';
     background = selected || isInRange ? 'purple' : background;
     background = unavailable ? 'teal' : background;
-    return { background };
+    let borderRadius = start ? '8px 0 0 8px' : '';
+    borderRadius = end ? '0 8px 8px 0' : borderRadius;
+    return {
+      background,
+      ...(start
+        ? { borderTopLeftRadius: '8px', borderBottomLeftRadius: '8px' }
+        : {}),
+      ...(end
+        ? { borderTopRightRadius: '8px', borderBottomRightRadius: '8px' }
+        : {})
+    };
   }
 );
 
@@ -61,17 +73,18 @@ class RangeDatepicker extends React.Component {
 
   getKeyOffset(number) {
     const e = document.activeElement;
-    let buttons = document.querySelectorAll('button');
-    buttons.forEach((el, i) => {
-      const newNodeKey = i + number;
-      if (el == e) {
+    const buttons = this.rootEl.querySelectorAll('button');
+    for (let i = 0; i < buttons.length; i++) {
+      if (buttons[i] == e) {
+        const newNodeKey = i + number;
         if (newNodeKey <= buttons.length - 1 && newNodeKey >= 0) {
           buttons[newNodeKey].focus();
         } else {
           buttons[0].focus();
         }
+        break;
       }
-    });
+    }
   }
 
   // Calendar level
@@ -106,6 +119,10 @@ class RangeDatepicker extends React.Component {
     return false;
   };
 
+  _setRootRef = ref => {
+    this.rootEl = ref;
+  };
+
   render() {
     return (
       <Dayzed
@@ -125,6 +142,7 @@ class RangeDatepicker extends React.Component {
             return (
               <Calendar
                 {...ArrowKeysReact.events}
+                innerRef={this._setRootRef}
                 onMouseLeave={this.onMouseLeave}
               >
                 <div>
@@ -168,6 +186,22 @@ class RangeDatepicker extends React.Component {
                           return <DayOfMonthEmpty key={key} />;
                         }
                         let { date, selected, selectable, today } = dateObj;
+                        let start =
+                          this.props.selected.length &&
+                          isSameDay(date, this.props.selected[0]);
+                        let end = false;
+                        if (
+                          this.props.selected.length > 1 &&
+                          isSameDay(date, this.props.selected[1])
+                        ) {
+                          end = true;
+                        } else if (
+                          this.props.selected.length &&
+                          isSameDay(date, this.state.hoveredDate)
+                        ) {
+                          end = true;
+                        }
+
                         return (
                           <DayOfMonth
                             key={key}
@@ -177,6 +211,8 @@ class RangeDatepicker extends React.Component {
                                 this.onMouseEnter(date);
                               }
                             })}
+                            start={start}
+                            end={end}
                             selected={selected}
                             unavailable={!selectable}
                             today={today}

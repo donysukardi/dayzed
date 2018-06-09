@@ -73,23 +73,28 @@ class Datepicker extends React.Component {
 
   getKeyOffset(number) {
     const e = document.activeElement;
-    let buttons = document.querySelectorAll('button');
-    buttons.forEach((el, i) => {
-      const newNodeKey = i + number;
-      if (el == e) {
+    const buttons = this.rootEl.querySelectorAll('button');
+    for (let i = 0; i < buttons.length; i++) {
+      if (buttons[i] == e) {
+        const newNodeKey = i + number;
         if (newNodeKey <= buttons.length - 1 && newNodeKey >= 0) {
           buttons[newNodeKey].focus();
         } else {
           buttons[0].focus();
         }
+        break;
       }
-    });
+    }
   }
 
   _handleOffsetChanged = offset => {
     this.setState({
       offset
     });
+  };
+
+  _setRootRef = ref => {
+    this.rootEl = ref;
   };
 
   render() {
@@ -118,7 +123,7 @@ class Datepicker extends React.Component {
         }) => {
           if (calendars.length) {
             return (
-              <Calendar {...ArrowKeysReact.events}>
+              <Calendar innerRef={this._setRootRef} {...ArrowKeysReact.events}>
                 <div>
                   <button
                     {...getBackProps({
