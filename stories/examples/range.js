@@ -126,7 +126,7 @@ class RangeDatepicker extends React.Component {
 
   render() {
     const { selected } = this.props;
-    const dates = selected.length
+    const dateBounds = selected.length
       ? [
           selected[0],
           ...[].concat(selected[1] || this.state.hoveredDate || [])
@@ -195,9 +195,10 @@ class RangeDatepicker extends React.Component {
                           return <DayOfMonthEmpty key={key} />;
                         }
                         let { date, selected, selectable, today } = dateObj;
-
-                        let start = dates[0] && isSameDay(dates[0], date);
-                        let end = dates[1] && isSameDay(dates[1], date);
+                        let start =
+                          dateBounds[0] && isSameDay(dateBounds[0], date);
+                        let end =
+                          dateBounds[1] && isSameDay(dateBounds[1], date);
 
                         return (
                           <DayOfMonth
