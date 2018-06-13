@@ -1,133 +1,17 @@
 import React from 'react';
 import glamorous from 'glamorous';
 import { RangeDatePicker } from '../../src/index';
-import ArrowKeysReact from 'arrow-keys-react';
 import { monthNamesFull, weekdayNamesShort } from './calendarUtils';
-
-let Calendar = glamorous.div({
-  maxWidth: 800,
-  margin: '0 auto',
-  textAlign: 'center'
-});
-
-let Month = glamorous.div({
-  display: 'inline-block',
-  width: '50%',
-  padding: '0 10px 30px',
-  boxSizing: 'border-box'
-});
-
-const dayOfMonthStyle = {
-  display: 'inline-block',
-  width: 'calc((100% / 7) - 4px)', // make allowance for active border
-  border: 'none',
-  margin: '2px' // make allowance for active border
-};
-
-let DayOfMonth = glamorous.button(
-  dayOfMonthStyle,
-  ({ selected, unavailable, today, inRange, start, end }) => {
-    let background = today ? 'cornflowerblue' : '';
-    background = selected || inRange ? 'purple' : background;
-    background = unavailable ? 'teal' : background;
-
-    let color = selected || inRange ? 'white' : 'inherit';
-
-    return {
-      background,
-      color,
-      ...(start
-        ? { borderTopLeftRadius: '16px', borderBottomLeftRadius: '16px' }
-        : {}),
-      ...(end
-        ? { borderTopRightRadius: '16px', borderBottomRightRadius: '16px' }
-        : {})
-    };
-  }
-);
-
-let DayOfMonthEmpty = glamorous.div(dayOfMonthStyle, {
-  background: 'transparent'
-});
+import Calendar from './Calendar';
 
 class RangeDatepicker extends React.Component {
   render() {
     return (
       <RangeDatePicker
         {...this.props}
-        render={({
-          calendars,
-          getRootProps,
-          getDateProps,
-          getBackProps,
-          getForwardProps
-        }) => {
-          if (calendars.length) {
-            return (
-              <Calendar {...getRootProps({ refKey: 'innerRef' })}>
-                <div>
-                  <button
-                    {...getBackProps({
-                      calendars,
-                      offset: 12
-                    })}
-                  >
-                    {'<<'}
-                  </button>
-                  <button {...getBackProps({ calendars })}>Back</button>
-                  <button {...getForwardProps({ calendars })}>Next</button>
-                  <button
-                    {...getForwardProps({
-                      calendars,
-                      offset: 12
-                    })}
-                  >
-                    {'>>'}
-                  </button>
-                </div>
-                {calendars.map(calendar => (
-                  <Month key={`${calendar.month}${calendar.year}`}>
-                    <div>
-                      {monthNamesFull[calendar.month]} {calendar.year}
-                    </div>
-                    {weekdayNamesShort.map(weekday => (
-                      <DayOfMonthEmpty
-                        key={`${calendar.month}${calendar.year}${weekday}`}
-                      >
-                        {weekday}
-                      </DayOfMonthEmpty>
-                    ))}
-                    {calendar.weeks.map((week, windex) =>
-                      week.map((dateObj, index) => {
-                        let key = `${calendar.month}${
-                          calendar.year
-                        }${windex}${index}`;
-                        if (!dateObj) {
-                          return <DayOfMonthEmpty key={key} />;
-                        }
-                        let { date, selected, selectable, today } = dateObj;
-                        return (
-                          <DayOfMonth
-                            key={key}
-                            {...getDateProps({
-                              dateObj
-                            })}
-                            selected={selected}
-                            unavailable={!selectable}
-                            today={today}
-                          >
-                            {selectable ? date.getDate() : 'X'}
-                          </DayOfMonth>
-                        );
-                      })
-                    )}
-                  </Month>
-                ))}
-              </Calendar>
-            );
-          }
-          return null;
-        }}
+        render={renderProps => (
+          <Calendar weekdayNames={weekdayNamesShort} {...renderProps} />
+        )}
       />
     );
   }

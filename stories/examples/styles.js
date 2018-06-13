@@ -1,12 +1,12 @@
 import glamorous from 'glamorous';
 
 const Calendar = glamorous.div({
-  maxWidth: 800,
   margin: '0 auto',
   fontFamily: 'sans-serif'
 });
 
 const Month = glamorous.div({
+  maxWidth: 800,
   display: 'table',
   borderCollapse: 'collapse',
   borderSpacing: 0,
@@ -56,19 +56,30 @@ const dayStyle = {
   padding: '.5rem',
   border: 'none',
   verticalAlign: 'middle',
-  width: '100%'
+  width: '100%',
+  fontSize: '1rem'
 };
 
 const Day = glamorous.button(
   dayStyle,
-  ({ selected, unavailable, today, currentMonth }) => {
+  ({ selected, unavailable, today, currentMonth, inRange, start, end }) => {
     let background = today ? 'cornflowerblue' : 'transparent';
-    background = selected ? 'purple' : background;
-    background = unavailable ? 'teal' : background;
-    let color = !currentMonth ? 'rgba(0, 0, 0, 0.6)' : '';
-    color = selected ? 'white' : color;
+    background = selected || inRange ? 'purple' : background;
+    background = unavailable ? 'rgba(0, 0, 0, 0.125)' : background;
 
-    return { background, color };
+    let color = !currentMonth ? 'rgba(0, 0, 0, 0.6)' : '';
+    color = selected || inRange ? 'white' : color;
+
+    return {
+      background,
+      color,
+      ...(start
+        ? { borderTopLeftRadius: '16px', borderBottomLeftRadius: '16px' }
+        : {}),
+      ...(end
+        ? { borderTopRightRadius: '16px', borderBottomRightRadius: '16px' }
+        : {})
+    };
   }
 );
 
