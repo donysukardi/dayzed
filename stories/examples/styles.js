@@ -35,6 +35,9 @@ const NavButton = glamorous.button({
   },
   '&:hover, &:active, &:focus': {
     borderColor: 'rgba(0, 0, 0, 0.75)'
+  },
+  '& + &': {
+    marginLeft: '.25rem'
   }
 });
 
