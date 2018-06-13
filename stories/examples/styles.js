@@ -1,132 +1,181 @@
-import glamorous from 'glamorous';
+import React from 'react';
+import styled, { css } from 'styled-components';
 
-const Calendar = glamorous.div({
-  margin: '0 auto',
-  fontFamily: 'sans-serif',
-  padding: '1.5rem'
-});
+const Calendar = styled.div`
+  margin: 0 auto;
+  font-family: sans-serif;
+  padding: 1.5rem;
+`;
 
-const MonthsWrapper = glamorous.div({
-  position: 'relative',
-  display: 'inline-flex'
-});
+const MonthsWrapper = styled.div`
+  position: relative;
+  display: inline-flex;
+`;
 
-const NavBar = glamorous.div({});
+const NavBar = styled.div``;
 
-const NavBarPrevious = glamorous.div({
-  position: 'absolute',
-  left: 0,
-  top: 0
-});
+const NavBarPrevious = styled.div`
+  position: absolute;
+  left: 0;
+  top: 0;
+`;
 
-const NavBarNext = glamorous.div({
-  position: 'absolute',
-  right: 0,
-  top: 0
-});
+const NavBarNext = styled.div`
+  position: absolute;
+  right: 0;
+  top: 0;
+`;
 
-const NavButton = glamorous.button({
-  background: 'transparent',
-  borderRadius: '2px',
-  color: 'rgba(0, 0, 0, 0.5)',
-  borderColor: 'rgba(0, 0, 0, 0.5)',
-  '> svg': {
-    fill: 'currentColor'
-  },
-  '&:hover, &:active, &:focus': {
-    borderColor: 'rgba(0, 0, 0, 0.75)'
-  },
-  '& + &': {
-    marginLeft: '.25rem'
+const NavButton = styled.button`
+  background: transparent;
+  border-radius: 2px;
+  color: rgba(0, 0, 0, 0.5);
+  border-color: rgba(0, 0, 0, 0.5);
+  & > svg {
+    fill: currentColor;
+    vertical-align: middle;
   }
-});
-
-const Month = glamorous.div({
-  maxWidth: 800,
-  display: 'table',
-  borderCollapse: 'collapse',
-  borderSpacing: 0,
-  '& + &': {
-    marginLeft: '1rem'
+  &:hover,
+  &:active,
+  &:focus {
+    border-color: rgba(0, 0, 0, 0.75);
   }
-});
+  & + & {
+    margin-left: 0.25rem;
+  }
+`;
 
-const Caption = glamorous.div({
-  padding: '0 .5rem',
-  display: 'table-caption',
-  textAlign: 'center',
-  marginBottom: '1rem',
-  fontSize: '1.15rem',
-  fontWeight: '500',
-  lineHeight: '31px'
-});
+const Month = styled.div`
+  max-width: 800;
+  display: table;
+  border-collapse: collapse,
+  border-spacing: 0;
+  & + & {
+    margin-left: 1rem
+  }
+`;
 
-const cellStyle = {
-  padding: '.75rem'
-};
+const Caption = styled.div`
+  padding: 0 0.5rem;
+  display: table-caption;
+  text-align: center;
+  margin-bottom: 1rem;
+  font-size: 1.15rem;
+  font-weight: 500;
+  line-height: 31px;
+`;
 
-const Weekdays = glamorous.div({
-  display: 'table-header-group'
-});
+const cellStyle = css`
+  height: 48px;
+  width: 48px;
+`;
 
-const WeekdaysRow = glamorous.div({
-  display: 'table-row',
-  margin: '1.5rem 0'
-});
+const Weekdays = styled.div`
+  display: table-header-group;
+`;
 
-const Weekday = glamorous.div(cellStyle, {
-  display: 'table-cell',
-  fontSize: '.875em',
-  textAlign: 'center',
-  color: '#8b9898'
-});
+const WeekdaysRow = styled.div`
+  display: table-row;
+  margin: 1.5rem 0;
+`;
 
-const Body = glamorous.div({
-  display: 'table-row-group'
-});
+const Weekday = styled.div`
+  ${cellStyle} display: table-cell;
+  font-size: 0.875em;
+  text-align: center;
+  color: #8b9898;
+`;
 
-const Week = glamorous.div({
-  display: 'table-row'
-});
+const Body = styled.div`
+  display: table-row-group;
+`;
 
-const DayCell = glamorous.div({
-  display: 'table-cell'
-});
+const Week = styled.div`
+  display: table-row;
+`;
 
-const dayStyle = {
-  border: 'none',
-  verticalAlign: 'middle',
-  width: '100%',
-  fontSize: '1rem'
-};
+const dayStyle = css`
+  border: none;
+  vertical-align: middle;
+  width: 100%;
+  font-size: 1rem;
+  margin: 8px 0;
+`;
 
-const Day = glamorous.button(
-  cellStyle,
-  dayStyle,
-  ({ selected, unavailable, today, currentMonth, inRange, start, end }) => {
+const Day = styled(
+  ({ start, end, unavailable, today, currentMonth, inRange, ...rest }) => (
+    <button {...rest} />
+  )
+)`
+  ${cellStyle} ${dayStyle}
+
+  position: relative;
+  z-index: 0;
+
+  &:before {
+    opacity: 0;
+    position: absolute;
+    content: '';
+    left: 8px;
+    top: 8px;
+    right: 8px;
+    bottom: 8px;
+    z-index: -1;
+    border-radius: 50%;
+  }
+
+  ${({
+    selected,
+    unavailable,
+    today,
+    currentMonth,
+    inRange,
+    start,
+    end,
+    hovered
+  }) => {
     let background = today ? 'cornflowerblue' : 'transparent';
     background = selected || inRange ? 'purple' : background;
     background = unavailable ? 'rgba(0, 0, 0, 0.125)' : background;
 
-    let color = !currentMonth ? 'rgba(0, 0, 0, 0.25)' : '';
+    let color = !currentMonth ? 'rgba(0, 0, 0, 0.25)' : 'inherit';
     color = selected || inRange ? 'white' : color;
 
-    return {
-      background,
-      color,
-      ...(start
-        ? { borderTopLeftRadius: '16px', borderBottomLeftRadius: '16px' }
-        : {}),
-      ...(end
-        ? { borderTopRightRadius: '16px', borderBottomRightRadius: '16px' }
-        : {})
-    };
-  }
-);
+    let shouldHighlight = start || end;
+    let hoverBg = shouldHighlight ? 'red' : 'transparent';
+    hoverBg = hovered ? 'rgba(255, 0, 0, 0.5)' : hoverBg;
 
-const DayEmpty = glamorous.div(dayStyle, {
-  background: 'transparent'
-});
+    return css`
+      background: ${background};
+      color: ${color};
+      border-top-left-radius: ${start ? '50%' : '0'};
+      border-bottom-left-radius: ${start ? '50%' : '0'};
+      border-top-right-radius: ${end ? '50%' : '0'};
+      border-bottom-right-radius: ${end ? '50%' : '0'};
+      &:before {
+        opacity: ${shouldHighlight ? 1 : 0};
+        background-color: ${hoverBg};
+      }
+    `;
+  }};
+`;
+
+const DayCell = styled.div`
+  display: table-cell;
+  &:first-child > ${Day} {
+    border-top-left-radius: 50%;
+    border-bottom-left-radius: 50%;
+  }
+
+  &:last-child > ${Day} {
+    border-top-right-radius: 50%;
+    border-bottom-right-radius: 50%;
+  }
+`;
+
+const DayEmpty = styled.div`
+  ${dayStyle} background: transparent;
+`;
 
 export {
   Calendar,

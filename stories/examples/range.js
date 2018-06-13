@@ -1,5 +1,4 @@
 import React from 'react';
-import glamorous from 'glamorous';
 import { RangeDatePicker } from '../../src/index';
 import { monthNamesFull, weekdayNamesShort } from './calendarUtils';
 import Calendar from './Calendar';

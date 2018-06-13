@@ -139,7 +139,7 @@ const Calendar = ({
             </Weekdays>
             <Body data-test="calendarDates" role="rowgroup">
               {calendar.weeks.map((week, windex) => (
-                <Week role="row">
+                <Week key={windex} role="row">
                   {week.map((dateObj, index) => {
                     let key = `${calendar.month}${
                       calendar.year

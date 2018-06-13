@@ -1,79 +1,82 @@
 import React from 'react';
-import glamorous, { Div } from 'glamorous';
+import styled, { css } from 'styled-components';
 import { DatePicker } from '../../src/index';
 import { monthNamesShort, weekdayNamesShort } from './calendarUtils';
 
-let Calendar = glamorous.div({
-  maxWidth: 800,
-  margin: '0 auto',
-  textAlign: 'center',
-  fontFamily: 'Arial, sans-serif',
-  fontSize: 16,
-  paddingTop: 30
-});
+let Calendar = styled.div`
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+  font-family: 'Arial', sans-serif;
+  font-size: 16;
+  padding-top: 30;
+`;
 
-let Controls = glamorous.div({
-  margin: '0 auto',
-  width: '50%'
-});
+let Controls = styled.div`
+  margin: 0 auto;
+  width: 50%;
+`;
 
-let ControlButton = glamorous.button({
-  width: '25%',
-  background: '#000',
-  padding: 10,
-  color: '#fff',
-  border: 'none',
-  fontSize: 16,
-  ':disabled': {
-    color: '#4d4d4d'
+let ControlButton = styled.button`
+  width: 25%;
+  background: #000;
+  padding: 10px;
+  color: #fff;
+  border: none;
+  font-size: 16px;
+  &:disabled {
+    color: #4d4d4d;
   }
-});
+`;
 
-let MonthYear = glamorous.div({
-  writingMode: 'vertical-rl',
-  textOrientation: 'upright',
-  display: 'inline-block',
-  verticalAlign: 'middle',
-  letterSpacing: 3,
-  color: '#c1c1c1',
-  padding: '0 10px'
-});
+let MonthYear = styled.div`
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  display: inline-block;
+  vertical-align: middle;
+  letter-spacing: 3px;
+  color: #c1c1c1;
+  padding: 0 10px;
+`;
 
-let Month = glamorous.div({
-  display: 'inline-block',
-  width: '50%',
-  background: '#e1e1e1',
-  padding: 10,
-  boxSizing: 'border-box',
-  verticalAlign: 'middle'
-});
+let Month = styled.div`
+  display: inline-block;
+  width: 50%;
+  background: #e1e1e1;
+  padding: 10px;
+  box-sizing: border-box;
+  vertical-align: middle;
+`;
 
-const dayOfMonthStyle = {
-  display: 'inline-block',
-  width: 'calc(100% / 7)',
-  border: 'none',
-  fontSize: 16,
-  background: 'transparent'
-};
+const dayOfMonthStyle = css`
+  display: inline-block;
+  width: calc(100% / 7);
+  border: none;
+  font-size: 16px;
+  background: transparent;
+`;
 
-let DayOfMonth = glamorous.button(
-  dayOfMonthStyle,
-  ({ selected, unavailable, today }) => {
-    let background = today ? 'cornflowerblue' : dayOfMonthStyle.background;
+let DayOfMonth = styled.div`
+  ${dayOfMonthStyle} ${({ selected, unavailable, today }) => {
+    let background = today ? 'cornflowerblue' : 'transparent';
     background = selected ? 'purple' : background;
-    return { background };
-  },
-  ({ selected, unavailable, today }) =>
-    (selected || today) && { color: '#fff' },
-  ({ unavailable }) => unavailable && { color: '#9b9b9b' }
-);
+    let color = (selected || today) && '#fff';
+    color = unavailable ? '#9b9b9b' : color;
 
-let DayOfMonthEmpty;
-let WeekdayName = (DayOfMonthEmpty = glamorous.div(dayOfMonthStyle, {
-  background: 'transparent',
-  paddingBottom: 10,
-  color: '#fff'
-}));
+    return `
+      background: ${background};
+      color: ${color};
+    `;
+  }};
+`;
+
+let WeekdayName = styled.div`
+  ${dayOfMonthStyle} background: transparent;
+  padding-bottom: 10px;
+  color: #fff;
+`;
+
+let DayOfMonthEmpty = styled(WeekdayName)``;
 
 class Datepicker extends React.Component {
   render() {
