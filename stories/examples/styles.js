@@ -108,7 +108,7 @@ const Day = glamorous.button(
     background = selected || inRange ? 'purple' : background;
     background = unavailable ? 'rgba(0, 0, 0, 0.125)' : background;
 
-    let color = !currentMonth ? 'rgba(0, 0, 0, 0.6)' : '';
+    let color = !currentMonth ? 'rgba(0, 0, 0, 0.25)' : '';
     color = selected || inRange ? 'white' : color;
 
     return {
