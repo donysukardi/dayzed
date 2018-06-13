@@ -70,6 +70,8 @@ const Day = glamorous.button(
     background = selected ? 'purple' : background;
     background = unavailable ? 'teal' : background;
     let color = !currentMonth ? 'rgba(0, 0, 0, 0.6)' : '';
+    color = selected ? 'white' : color;
+
     return { background, color };
   }
 );
