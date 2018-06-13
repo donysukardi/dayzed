@@ -16,7 +16,7 @@ class MinMax extends React.Component {
   render() {
     let { selectedDate, date, minDate, maxDate } = this.state;
     return (
-      <div>
+      <div style={{ textAlign: 'center' }}>
         <Datepicker
           date={date}
           selected={this.state.selectedDate}

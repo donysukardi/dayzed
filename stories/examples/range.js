@@ -30,7 +30,7 @@ class Range extends React.Component {
   render() {
     let { selectedDates, date } = this.state;
     return (
-      <div>
+      <div style={{ textAlign: 'center' }}>
         <RangeDatepicker
           date={date}
           selected={this.state.selectedDates}

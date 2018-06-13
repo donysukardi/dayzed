@@ -16,7 +16,7 @@ class Multi extends React.Component {
   render() {
     let { selectedDates, date } = this.state;
     return (
-      <div>
+      <div style={{ textAlign: 'center' }}>
         <Datepicker
           multi
           date={date}

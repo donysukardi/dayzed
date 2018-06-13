@@ -40,7 +40,7 @@ class Single extends React.Component {
   render() {
     let { selectedDate, date, firstDayOfWeek, fillAdjacentMonths } = this.state;
     return (
-      <div>
+      <div style={{ textAlign: 'center' }}>
         <Datepicker
           date={date}
           selected={selectedDate}
